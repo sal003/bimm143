@@ -1,0 +1,175 @@
+---
+title: "Machine Learning 1"
+author: 'Groot (PID: A15485151)'
+date: "10/21/2021"
+output: html_document
+---
+
+First up is clustering methods
+
+# Kmeans clustering
+
+The function in base R to do Kmeans clustering is called 'kmeans()'.
+
+First make up some data where we known what the answer should be:
+
+```{r}
+# normal distribution around -3 and 3 (30 points each)
+tmp <- c(rnorm(30,-3),rnorm(30,3))
+x <- cbind(x=tmp, y=rev(tmp))
+plot(x)
+
+```
+
+> Q. Can we use kmeans() to cluster this data setting k = 2 and nstart = 20?
+
+```{r}
+km <- kmeans(x, centers = 2, nstart = 20)
+km
+```
+
+> Q. How many points are in each cluster?
+
+```{r}
+km$size
+
+```
+
+> Q. What 'component' of your result object details cluster assignment/membership?
+
+```{r}
+km$cluster
+```
+
+> Q. What 'component' of your result object details cluster center?
+
+```{r}
+km$centers
+```
+
+> Q. Plot x colored by the kmeans cluster assignment and add cluster centers as blue points
+
+```{r}
+plot(x, col=km$cluster) + points(km$centers, col="blue", pch=15, cex=2)
+```
+
+
+# Hierarchical clustering or hclust()
+
+A big limitation with k-means is that we have to tell it K (the number of clusters we want).
+
+Use hclust instead to get around this.
+
+```{r}
+hc <- hclust(dist(x))
+hc
+```
+
+There is a plot method for hcust result objects. 
+
+```{r}
+plot(hc)
+```
+
+To get our cluster membership vector we have to do a little bit more work. We have to "cut" the tree (dendrogram) where we want. For this we use the 'cutree()' function.
+
+```{r}
+cutree(hc, h = 6)
+```
+
+You can also call cutree() setting k=the number of groups/clusters you want
+
+```{r}
+grps <- cutree(hc, k = 2)
+```
+
+Make our results plot
+```{r}
+plot(x, col = grps)
+```
+
+
+# Principal Component Analysis
+url <- "https://tinyurl.com/UK-foods"
+x <- read.csv(url)
+
+> Q1. How many rows and columns are in your new data frame named x? What R functions could you use to answer this questions?
+
+```{r}
+dim(x)
+```
+
+## Preview the first 6 rows
+```{r}
+head(x)
+```
+
+Error in number of columns. Should be 17 x 4
+```{r}
+# Note how the minus indexing works
+rownames(x) <- x[,1]
+x <- x[,-1]
+head(x)
+```
+
+We **lose** a country each time we run the code chunk...
+So instead
+```{r}
+x <- read.csv(url, row.names=1)
+head(x)
+```
+
+> Q2. Which approach to solving the ‘row-names problem’ mentioned above do you prefer and why? Is one approach more robust than another under certain circumstances?
+
+I prefer the second approach where you set the rownames ahead of time since it prevents the loss of data when the code chunk is run more than one time.
+
+#Spotting major differences and trends
+```{r}
+barplot(as.matrix(x), beside=T, col=rainbow(nrow(x)))
+```
+
+> Q3: Changing what optional argument in the above barplot() function results in the following plot?
+
+```{r}
+#set "besides = FALSE"
+barplot(as.matrix(x), besides = FALSE,  col=rainbow(nrow(x)))
+```
+
+> Q5: Generating all pairwise plots may help somewhat. Can you make sense of the following code and resulting figure? What does it mean if a given point lies on the diagonal for a given plot?
+
+```{r}
+pairs(x, col=rainbow(10), pch=16)
+```
+If a point lies on the diagonal for the given plot, it means that there is a strong correlation between the two countries for that same food type. This means that the more the points lie close to the diagonal line, the more similar the two countries in question are in terms of what the people of each country eat.
+
+> Q6. What is the main differences between N. Ireland and the other countries of the UK in terms of this data-set?
+
+The main differences between N. Ireland and the other countries of the UK is the blue plot that deviates from the diagonal in all three plots against the country of N. Ireland.
+
+A lot of tedious work
+#PCA to the rescue!
+
+The main function in base R for PCA is 'prcomp()'
+This requires us to transpose (switch x and y) the data w/ "(t(x))"
+```{r}
+# Use the prcomp() PCA function 
+pca <- prcomp( t(x) )
+summary(pca)
+```
+
+
+> Q7. Complete the code below to generate a plot of PC1 vs PC2. The second line adds text labels over the data points.
+
+```{r}
+# Plot PC1 vs PC2
+plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab="PC2", xlim=c(-270,500))
+text(pca$x[,1], pca$x[,2], colnames(x))
+```
+
+>Q8. Customize your plot so that the colors of the country names match the colors in our UK and Ireland map and table at start of this document.
+
+```{r}
+plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab="PC2", xlim=c(-270,500))
+text(pca$x[,1], pca$x[,2], colnames(x))
+```
+ 
