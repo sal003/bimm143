@@ -2,7 +2,7 @@
 title: "Machine Learning 1"
 author: 'Groot (PID: A15485151)'
 date: "10/21/2021"
-output: html_document
+output: pdf_document
 ---
 
 First up is clustering methods
@@ -115,6 +115,7 @@ head(x)
 We **lose** a country each time we run the code chunk...
 So instead
 ```{r}
+url <- "https://tinyurl.com/UK-foods"
 x <- read.csv(url, row.names=1)
 head(x)
 ```
@@ -174,4 +175,46 @@ color <- c("orange", "red", "blue", "green")
 text(pca$x[,1], pca$x[,2], colnames(x), col = color)
 ```
  
+# variation level for pca
+```{r}
+v <- round( pca$sdev^2/sum(pca$sdev^2) * 100 )
+v
+#plot variation
+barplot(v, xlab="Principal Component", ylab="Percent Variation")
+```
 
+#variable loading
+```{r}
+## Lets focus on PC1 as it accounts for > 90% of variance 
+par(mar=c(10, 3, 0.35, 0))
+barplot( pca$rotation[,1], las=2 )
+```
+
+> Q9: Generate a similar ‘loadings plot’ for PC2. What two food groups feature prominantely and what does PC2 maninly tell us about?
+
+```{r}
+par(mar=c(10, 3, 0.35, 0))
+barplot( pca$rotation[,2], las=2 )
+```
+The two food groups that are featured predominantly is fresh potatoes and soft drinks. PC2 tells us about most of the  variation that is not covered by PC1.
+
+#Biplots
+```{r}
+## The inbuilt biplot() can be useful for small datasets 
+biplot(pca)
+```
+
+#PCA of RNA-seq data
+load data
+```{r}
+url2 <- "https://tinyurl.com/expression-CSV"
+rna.data <- read.csv(url2, row.names=1)
+head(rna.data)
+```
+
+> Q10: How many genes and samples are in this data set?
+
+```{r}
+dim(rna.data)
+```
+100 genes and 10 samples for each gene!
