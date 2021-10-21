@@ -170,6 +170,12 @@ text(pca$x[,1], pca$x[,2], colnames(x))
 
 ```{r}
 plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab="PC2", xlim=c(-270,500))
-text(pca$x[,1], pca$x[,2], colnames(x))
+color <- c("orange", "red", "blue", "green")
+text(pca$x[,1], pca$x[,2], colnames(x), col = color)
 ```
  
+```{r}
+
+
+```
+
