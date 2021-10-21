@@ -174,8 +174,4 @@ color <- c("orange", "red", "blue", "green")
 text(pca$x[,1], pca$x[,2], colnames(x), col = color)
 ```
  
-```{r}
-
-
-```
 
