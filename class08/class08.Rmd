@@ -218,3 +218,5 @@ head(rna.data)
 dim(rna.data)
 ```
 100 genes and 10 samples for each gene!
+
+
