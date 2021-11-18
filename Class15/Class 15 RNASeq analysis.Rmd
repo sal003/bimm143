@@ -127,6 +127,7 @@ mycounts <- meancounts[-to.rm,]
 head(mycounts)
 ```
 
+
 How many do we have left?
 ```{r}
 nrow(mycounts)
@@ -319,10 +320,66 @@ library(gageData)
 data(kegg.sets.hs)
 ```
 
+Examine the first 2 pathways in this kegg set for humans
+```{r}
+ head(kegg.sets.hs, 2)
+```
+Prep before using gage() function
+```{r}
+foldchanges = res$log2FoldChange
+names(foldchanges) = res$entrez
+head(foldchanges)
+```
+get the results
+```{r}
+keggres = gage(foldchanges, gsets=kegg.sets.hs)
+attributes(keggres) 
+```
+Look at the first three down (less) pathways
+```{r}
+head(keggres$less, 3)
+```
 
+use pathview() function to make a pathway plot
+```{r}
+pathview(gene.data=foldchanges, pathway.id="hsa05310")
+# A different PDF based output of the same data
+  pathview(gene.data=foldchanges, pathway.id="hsa05310", kegg.native=FALSE)
+```
 
+> Q12. Can you do the same procedure as above to plot the pathview figures for the top 2 down-reguled pathways?
 
+```{r}
+#Graft-versus-host disease
+    pathview(gene.data=foldchanges, pathway.id="hsa05332")
+    pathview(gene.data=foldchanges, pathway.id="hsa05332", kegg.native=FALSE)
+  #Type I diabetes mellitus
+    pathview(gene.data=foldchanges, pathway.id="hsa04940")
+    pathview(gene.data=foldchanges, pathway.id="hsa04940", kegg.native=FALSE)
+```
 
+##Plotting counts for genes of interest
+```{r}
+i <- grep("CRISPLD2", res$symbol)
+    res[i,]
+    rownames(res[i,])
+    plotCounts(dds, gene="ENSG00000103196", intgroup="dex")
+    # Return the data
+    d <- plotCounts(dds, gene="ENSG00000103196", intgroup="dex", returnData=TRUE)
+    head(d)
+    boxplot(count ~ dex , data=d)
+    #Or do it all on ggplot2
+      library(ggplot2)
+        ggplot(d, aes(dex, count, fill=dex)) + 
+       geom_boxplot() + 
+       scale_y_log10() + 
+       ggtitle("CRISPLD2")
+```
+
+#Session info check
+```{r}
+sessionInfo()
+```
 
 
 
