@@ -8,6 +8,7 @@ output: pdf_document
 load DESeq2
 ```{r}
 library(DESeq2)
+
 ```
 
 load data files
