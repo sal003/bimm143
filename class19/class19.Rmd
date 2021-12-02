@@ -9,6 +9,7 @@ output: pdf_document
 #Proportion of G/G in a population
 ```{r}
 mxl <- read.csv("373531-SampleGenotypes-Homo_sapiens_Variation_Sample_rs8067378.csv")
+
 ```
 
 ```{r}
