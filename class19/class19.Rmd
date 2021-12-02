@@ -1,0 +1,67 @@
+---
+title: "class19"
+author: 'Groot (PID: A15485151)'
+date: "11/30/2021"
+output: pdf_document
+---
+
+
+#Proportion of G/G in a population
+```{r}
+mxl <- read.csv("373531-SampleGenotypes-Homo_sapiens_Variation_Sample_rs8067378.csv")
+```
+
+```{r}
+table(mxl$Genotype..forward.strand.)
+
+```
+```{r}
+table(mxl$Genotype..forward.strand.)/nrow(mxl) * 100
+
+```
+
+
+##Section 4: Population Scale Analysis
+> Q13. Read this file into R and determine the sample size for each genotype and their
+corresponding median expression levels for each of these genotypes.
+
+```{r}
+expr <- read.table("rs8067378_ENSG00000172057.6.txt")
+head(expr)
+table(expr$geno)
+```
+**sample size**:
+  A/A 108
+  A/G 233
+  G/G 121
+  
+
+```{r}
+library(ggplot2)
+```
+```{r}
+box <- ggplot(expr)+ aes(geno, exp, fill= geno) + geom_boxplot(notch = TRUE)
+box
+```
+
+**median expression level**:
+  A/A 32
+  A/G 25
+  G/G 20
+  
+
+> Q14: Generate a boxplot with a box per genotype, what could you infer from the relative
+expression value between A/A and G/G displayed in this plot? Does the SNP effect the
+expression of ORMDL3?
+
+```{r}
+library(ggplot2)
+```
+```{r}
+ggplot(expr)+ aes(geno, exp, fill= geno) + geom_boxplot(notch = TRUE)
+
+```
+The relative gene expression is reduced from A/A to G/G so we could infer that the G/G genotype variation or the G/G SNP does affect the expression level of ORMDL3.
+
+
+

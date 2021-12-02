@@ -1,6 +1,6 @@
 ---
 title: "class11"
-output: github_document
+output: pdf_document
 ---
 
 ## A quick look at the PDB
@@ -34,9 +34,9 @@ round(db$Total/methods.sums["Total"]*100,2)
 
 \#\#VMD structure visualization image
 
-![](mypicture.bmp)
+![](vmdscene.png)
 
-Q4: Water molecules normally have 3 atoms. Why do we see just one atom per water molecule in this structure?
+> Q4: Water molecules normally have 3 atoms. Why do we see just one atom per water molecule in this structure?
 
 The Hydrogen atom is too small to be seen through x-ray crystallography
 

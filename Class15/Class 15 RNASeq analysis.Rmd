@@ -223,8 +223,8 @@ Add individual columns to result table using mapIds()
 ```{r}
 res$symbol <- mapIds(org.Hs.eg.db,
                          keys=row.names(res), # Our genenames
-                         keytype="ENSEMBL",        # The format of our genenames
-                         column="SYMBOL",          # The new format we want to add
+                         keytype="ENSEMBL",   # The format of our genenames
+                         column="SYMBOL",     # new format we want 
                          multiVals="first")
 head(res)
 ```
@@ -263,6 +263,7 @@ export results to .csv
 ```{r}
 write.csv(res[ord,], "deseq_results.csv")
 ```
+
 
 ##Data visualization
 
@@ -304,6 +305,18 @@ resulting volcano plot with custom colors
           abline(h=-log(0.1), col="dark gray", lty=2)
 ```
 
+Let's make another volcano plot with some gene labels
+For this we can use the **EnhancedVolcano package**
+```{r}
+library(EnhancedVolcano)
+x <- as.data.frame(res)
+EnhancedVolcano(x,
+    lab = x$symbol,
+    x = 'log2FoldChange',
+    y = 'pvalue')
+```
+
+
 
 ##Pathway analysis
 ```{r}
@@ -324,7 +337,7 @@ Examine the first 2 pathways in this kegg set for humans
 ```{r}
  head(kegg.sets.hs, 2)
 ```
-Prep before using gage() function
+Prep before using gage() function which requires a named vector of fold changes, where the names of the values are the Entrez gene IDs.
 ```{r}
 foldchanges = res$log2FoldChange
 names(foldchanges) = res$entrez
@@ -335,6 +348,8 @@ get the results
 keggres = gage(foldchanges, gsets=kegg.sets.hs)
 attributes(keggres) 
 ```
+This separates out results by "greater" and "less" i.e. those that are up-regulated and those that are down-regulated.
+
 Look at the first three down (less) pathways
 ```{r}
 head(keggres$less, 3)
@@ -346,6 +361,9 @@ pathview(gene.data=foldchanges, pathway.id="hsa05310")
 # A different PDF based output of the same data
   pathview(gene.data=foldchanges, pathway.id="hsa05310", kegg.native=FALSE)
 ```
+
+![](hsa05310.pathview.png)
+
 
 > Q12. Can you do the same procedure as above to plot the pathview figures for the top 2 down-reguled pathways?
 
