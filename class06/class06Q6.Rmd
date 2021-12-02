@@ -1,0 +1,78 @@
+---
+title: "Lab 6 Question 6"
+author: 'Groot (PID: A15485151)'
+date: "10/19/2021"
+output: pdf_document
+---
+
+```{r}
+#load bio3d!
+library(bio3d)
+
+# use read.pdb() to read the protein PDB file
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+
+# Use trim.pdb() function to trim the protein PDB file to only entail chain A
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s3, chain="A", elety="CA")
+
+# Use the $ to selectively assign parts of the trimmed protein database file (rows 'atom' and column 'b') to new values
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+
+# Use plotb3() function with the argument ylab = "Bfactor"(w/ plot type = "l" and sse = trimmed protein PDB data file) to plot the residues on chain a based on their Bfactor
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+
+```
+
+Simplify to avoid calculation **duplication**!
+```{r}
+# x <- "4AKE" or name of protein PDB file (in "")
+
+s1 <- read.pdb("4AKE") 
+
+# a1 <- s1.chainA
+a1 <- trim.pdb(s1, chain="A", elety="CA")
+
+#b1 <- s1.b
+b1 <- a1$atom$b
+plotb3(b1, sse=a1, typ="l", ylab="Bfactor")
+
+```
+Now use these as the body of the function
+```{r}
+# The inputs of this function is the protein PDB data file (in"")
+# To use the function bfplot(), input the names (in "") of the protein PDB data file for x within the parenthesis of the function
+# Don't forget to load bio3d!!
+library(bio3d)
+bfplot <- function(x){
+  # x <- protein PDB file name (with "")
+s1 <- read.pdb(x) 
+
+# a1 <- s1.chainA
+a1 <- trim.pdb(s1, chain="A", elety="CA")
+
+#b1 <- s1.b
+b1 <- a1$atom$b
+plotb3(b1, sse=a1, typ="l", ylab="Bfactor")
+
+}
+```
+The **output** of this function is the "residue vs. Bfactor" plots of the input protein PDB data file
+
+
+**Check** if the function works! :)
+```{r}
+bfplot("4AKE")
+bfplot("1AKE")
+bfplot("1E4Y")
+```
+
+
+
