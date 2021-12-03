@@ -1,0 +1,32 @@
+---
+title: "work"
+author: "Groot (A15485151)"
+date: "11/9/2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+zebra <- read.table("mm-second.x.zebrafish.tsv", col.names = c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen", "qstart", "qend", "sstart", "send", "evalue", "bitscore"))
+```
+```{r}
+hist(zebra$bitscore, breaks=30)
+```
+```{r}
+#install.packages("ggplot2")
+```
+
+```{r}
+library(ggplot2)
+ggplot(zebra, aes(pident, bitscore)) + geom_point(alpha=0.1) 
+```
+
+```{r}
+ggplot(zebra, aes((zebra$pident * (zebra$qend - zebra$qstart)), bitscore)) + geom_point(alpha=0.1) + geom_smooth()
+
+```
+
+
+
+
